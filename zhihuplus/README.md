@@ -13,9 +13,15 @@
 
   3. 纤细优雅的滚动条。
 
+### 插件下载地址
+
+1. [**Greasy Fork**](https://greasyfork.org/zh-CN/scripts/411416-%E7%9F%A5%E4%B9%8Eplus)
+
+2. [**Github**](https://github.com/gaofanghuang/tampermonkey-userscript/blob/master/zhihuplus/zhihuplus.js)
+
 ### 功能更新：
 
-#### 2020-09-16：
+#### v0.1 2020-09-16：
 
   1. 发布v0.1
 

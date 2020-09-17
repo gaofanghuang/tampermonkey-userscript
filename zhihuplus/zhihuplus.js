@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎Plus
 // @namespace    zhihu_plus
-// @version      0.1
+// @version      0.2
 // @description  知乎Plus: 1. 暗色极简阅读模式；2. 去除官方或用户插入的广告
 // @author       Gaofang Huang
 // @match        https://*.zhihu.com/*
@@ -13,9 +13,6 @@
 // @require      https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
 // @grant        none
 // ==/UserScript==
-
-// 默认开启
-let plusSwitch = true
 
 // 图标-眼睛关
 const iconEyeClose = `<svg t="1600160078250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1172" width="200" height="200"><path d="M0 0h853.333333v853.333333H0z" fill="#FFFFFF" opacity=".01" p-id="1173"></path><path d="M942.933333 566.442667a32.256 32.256 0 0 1-2.602666 46.805333 36.693333 36.693333 0 0 1-22.741334 8.490667 35.584 35.584 0 0 1-25.856-10.965334l-85.248-91.605333c-0.512-0.512-0.512-0.981333-1.024-1.493333-44.458667 23.893333-95.104 41.813333-153.472 51.797333l35.626667 104.533333a32.426667 32.426667 0 0 1-21.674667 41.813334 40.704 40.704 0 0 1-10.88 1.493333 34.133333 34.133333 0 0 1-32.554666-22.869333l-39.765334-116.522667a1012.650667 1012.650667 0 0 1-166.912-0.981333l-38.229333 111.530666a34.133333 34.133333 0 0 1-32.554667 22.869334 40.704 40.704 0 0 1-10.88-1.493334c-18.090667-5.973333-27.904-24.362667-21.674666-41.813333l34.602666-101.077333c-62.506667-12.458667-112.64-31.872-153.472-56.277334l-90.965333 97.621334a33.962667 33.962667 0 0 1-25.813333 10.965333 34.602667 34.602667 0 0 1-22.741334-8.490667c-13.952-12.458667-15.488-33.365333-2.56-46.805333l86.272-93.098667c-31.530667-24.917333-57.344-52.778667-81.152-80.64a32.426667 32.426667 0 0 1 5.205334-46.848 35.370667 35.370667 0 0 1 48.554666 4.992c59.434667 70.229333 141.056 166.826667 392.192 166.826667 254.762667 0 342.101333-93.141333 385.536-162.858667a34.773333 34.773333 0 0 1 47.018667-11.434666c16.512 9.472 21.674667 29.866667 11.861333 45.312a366.976 366.976 0 0 1-84.736 94.122666l80.64 86.101334z" fill="#8590a6" p-id="1174"></path></svg>`
@@ -50,12 +47,22 @@ const iconEyeOpen = `<svg t="1600160150452" class="icon" viewBox="0 0 1024 1024"
   if ($('.switch-plus-btn').length === 0) {
     $('body').append($plusButton)
   }
-  if ($.cookie('plusMode') === 1) {
-    $('html').attr('data-plus', 'false')
-    $('.switch-plus-icon').html(iconEyeClose)
-  } else {
+  if (Number($.cookie('plusMode')) === 1) {
     $('html').attr('data-plus', 'true')
     $('.switch-plus-icon').html(iconEyeOpen)
+  } else {
+    $('html').attr('data-plus', 'false')
+    $('.switch-plus-icon').html(iconEyeClose)
+  }
+
+  // 外站地址直接跳转
+  const webHost = window.location.host
+  if (webHost === 'link.zhihu.com') {
+    const rule = /target=(.+?)(&|$)/
+    const regRet = location.search.match(rule)
+    if (regRet && regRet.length === 3) {
+      location.href = decodeURIComponent(regRet[1])
+    }
   }
 })()
 
@@ -74,26 +81,36 @@ function createUserStyle() {
     height: 24px;
   }
   /* 滚动条优化 */
-  body::-webkit-scrollbar,
-  .CommentListV2::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  html[data-plus=true] .highlight pre::-webkit-scrollbar,
+  html[data-plus=true] body::-webkit-scrollbar,
+  html[data-plus=true] .CommentListV2::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
   }
-  body::-webkit-scrollbar-thumb,
-  .CommentListV2::-webkit-scrollbar-thumb {
+  html[data-plus=true] .highlight pre::-webkit-scrollbar-thumb,
+  html[data-plus=true] body::-webkit-scrollbar-thumb,
+  html[data-plus=true] .CommentListV2::-webkit-scrollbar-thumb {
     background-color: rgb(133 144 166 / 0.2);
     transition: 0.2s;
-    border-radius: 8px;
+    border-radius: 2px;
   }
-  body::-webkit-scrollbar-track,
-  .CommentListV2::-webkit-scrollbar-track {
+  html[data-plus=true] .highlight pre::-webkit-scrollbar-track,
+  html[data-plus=true] body::-webkit-scrollbar-track,
+  html[data-plus=true] .CommentListV2::-webkit-scrollbar-track {
       background-color: rgba(0,0,0,0);
   }
-  body::-webkit-scrollbar-thumb,
-  .CommentListV2:hover::-webkit-scrollbar-thumb {
+  html[data-plus=true] .highlight pre::-webkit-scrollbar-thumb,
+  html[data-plus=true] body::-webkit-scrollbar-thumb,
+  html[data-plus=true] .CommentListV2:hover::-webkit-scrollbar-thumb {
       background-color: rgb(133 144 166 / 0.6);
   }
   /* 隐藏界面 */
+  html[data-plus=true] .PostIndex-Contributions,
+  html[data-plus=true] .RichContent-actions.is-fixed,
+  html[data-plus=true] .Recommendations-Main,
+  html[data-plus=true] .ColumnPageHeader,
+  html[data-plus=true] .Topstory-mainColumn .TopstoryItem--advertCard,
+  html[data-plus=true] .TopstoryMain .TopstoryItem--advertCard,
   html[data-plus=true] .RichText-MCNLinkCardContainer,
   html[data-plus=true] .Reward,
   html[data-plus=true] .ContentItem-meta .AuthorInfo + .Labels,
@@ -114,6 +131,19 @@ function createUserStyle() {
     background: #333333;
   }
   /* 卡片背景色 & 内容工具栏 */
+  html[data-plus=true] .Post-content {
+    background: transparent;
+  }
+  html[data-plus=true] .HotListNavEditPad {
+    background: #c9cdd8;
+    border-color: #b6b8c3;
+  }
+  html[data-plus=true] .HotListNav-item--deleteButton {
+    background: #a4adb3;
+  }
+  html[data-plus=true] .Post-RichTextContainer,
+  html[data-plus=true] .ProfileHeader-wrapper,
+  html[data-plus=true] .CommentsV2-withPagination,
   html[data-plus=true] .CommentEditorV2-inputWrap--active,
   html[data-plus=true] .CommentsV2-footer,
   html[data-plus=true] .CommentListV2-header-divider,
@@ -126,7 +156,22 @@ function createUserStyle() {
   html[data-plus=true] .Card {
     background: #bfc2ca;
   }
+  html[data-plus=true] .Post-Main .Post-Title {
+    color: #bfc2ca;
+  }
+  html[data-plus=true] .Post-Header {
+    margin-bottom: 20px;
+  }
+  html[data-plus=true] .Post-RichTextContainer {
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  html[data-plus=true] .RichContent-actions {
+    padding-left: 10px;
+  }
   /* 点赞按钮 */
+  html[data-plus=true] .Tag,
   html[data-plus=true] .HotListNav-item,
   html[data-plus=true] .VoteButton {
     background: rgb(138 138 138 / 10%);
@@ -152,8 +197,8 @@ function createUserStyle() {
     fill: #8590a6;
   }
   /* tab栏 & 卡片 */
+  html[data-plus=true] .CommentsV2-withPagination,
   html[data-plus=true] .CommentEditorV2-inputWrap--active,
-  html[data-plus=true] .CommentsV2-footer,
   html[data-plus=true] .NestComment .NestComment--child:after,
   html[data-plus=true] .NestComment--rootComment:after,
   html[data-plus=true] .NestComment:not(:last-child):after,
@@ -198,6 +243,17 @@ function createUserStyle() {
   html[data-plus=true] .HotList-end:after, .HotList-end:before {
     background-color: #47494c;
   }
-
+  /* 评论输入框 */
+  html[data-plus=true] .ZVideoLinkCard-info,
+  html[data-plus=true] .CommentsV2-footer {
+    background-color: #b9beca;
+  }
+  html[data-plus=true] .CommentsV2-footer {
+    border-color: #b6b9c1;
+  }
+  html[data-plus=true] .CommentEditorV2-inputWrap {
+    border-color: #b6b9c1;
+    background-color: #b9beca;
+  }
   `
 }

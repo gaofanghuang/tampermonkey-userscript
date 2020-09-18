@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎Plus
 // @namespace    zhihu_plus
-// @version      0.2
+// @version      0.3
 // @description  知乎Plus: 1. 暗色极简阅读模式；2. 去除官方或用户插入的广告
 // @author       Gaofang Huang
 // @match        https://*.zhihu.com/*
@@ -64,6 +64,7 @@ const iconEyeOpen = `<svg t="1600160150452" class="icon" viewBox="0 0 1024 1024"
       location.href = decodeURIComponent(regRet[1])
     }
   }
+
 })()
 
 function createUserStyle() {
@@ -81,12 +82,14 @@ function createUserStyle() {
     height: 24px;
   }
   /* 滚动条优化 */
+  html[data-plus=true] .Favlists-items::-webkit-scrollbar,
   html[data-plus=true] .highlight pre::-webkit-scrollbar,
   html[data-plus=true] body::-webkit-scrollbar,
   html[data-plus=true] .CommentListV2::-webkit-scrollbar {
     width: 4px;
     height: 4px;
   }
+  html[data-plus=true] .Favlists-items::-webkit-scrollbar-thumb,
   html[data-plus=true] .highlight pre::-webkit-scrollbar-thumb,
   html[data-plus=true] body::-webkit-scrollbar-thumb,
   html[data-plus=true] .CommentListV2::-webkit-scrollbar-thumb {
@@ -94,19 +97,22 @@ function createUserStyle() {
     transition: 0.2s;
     border-radius: 2px;
   }
+  html[data-plus=true] .Favlists-items::-webkit-scrollbar-track,
   html[data-plus=true] .highlight pre::-webkit-scrollbar-track,
   html[data-plus=true] body::-webkit-scrollbar-track,
   html[data-plus=true] .CommentListV2::-webkit-scrollbar-track {
       background-color: rgba(0,0,0,0);
   }
+  html[data-plus=true] .Favlists-items::-webkit-scrollbar-thumb,
   html[data-plus=true] .highlight pre::-webkit-scrollbar-thumb,
   html[data-plus=true] body::-webkit-scrollbar-thumb,
   html[data-plus=true] .CommentListV2:hover::-webkit-scrollbar-thumb {
       background-color: rgb(133 144 166 / 0.6);
   }
   /* 隐藏界面 */
+  html[data-plus=true] .SearchSideBar,
+  html[data-plus=true] .SearchTabs,
   html[data-plus=true] .PostIndex-Contributions,
-  html[data-plus=true] .RichContent-actions.is-fixed,
   html[data-plus=true] .Recommendations-Main,
   html[data-plus=true] .ColumnPageHeader,
   html[data-plus=true] .Topstory-mainColumn .TopstoryItem--advertCard,
@@ -121,6 +127,7 @@ function createUserStyle() {
     display: none !important;
   }
   /* 布局调整 */
+  html[data-plus=true] .SearchMain,
   html[data-plus=true] .Question-mainColumn,
   html[data-plus=true] .Topstory-mainColumn {
     margin-left: auto;
@@ -170,6 +177,9 @@ function createUserStyle() {
   html[data-plus=true] .RichContent-actions {
     padding-left: 10px;
   }
+  html[data-plus=true] .Highlight em {
+    color: #5f649c;
+  }
   /* 点赞按钮 */
   html[data-plus=true] .Tag,
   html[data-plus=true] .HotListNav-item,
@@ -197,6 +207,8 @@ function createUserStyle() {
     fill: #8590a6;
   }
   /* tab栏 & 卡片 */
+  html[data-plus=true] .Favlists-item,
+  html[data-plus=true] .CommentsV2-pagination,
   html[data-plus=true] .CommentsV2-withPagination,
   html[data-plus=true] .CommentEditorV2-inputWrap--active,
   html[data-plus=true] .NestComment .NestComment--child:after,
@@ -211,8 +223,12 @@ function createUserStyle() {
   html[data-plus=true] .Topstory-tabs {
     border-color: rgb(181 185 197);
   }
-  html[data-plus=true] .TopstoryTabs-link.is-active {
+  html[data-plus=true] .TopstoryTabs-link {
     color: #8590a6;
+  }
+  html[data-plus=true] .TopstoryTabs-link.is-active {
+    color: #333333;
+    font-weight: 600;
   }
   /* 查看更多 */
   html[data-plus=true] .ContentItem-more {

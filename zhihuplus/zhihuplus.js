@@ -148,6 +148,7 @@ function createUserStyle() {
   html[data-plus=true] .HotListNav-item--deleteButton {
     background: #a4adb3;
   }
+  html[data-plus=true] .RichContent-actions.is-fixed,
   html[data-plus=true] .Post-RichTextContainer,
   html[data-plus=true] .ProfileHeader-wrapper,
   html[data-plus=true] .CommentsV2-withPagination,
@@ -181,6 +182,7 @@ function createUserStyle() {
     color: #5f649c;
   }
   /* 点赞按钮 */
+  html[data-plus=true] .Post-SideActions button.like .Post-SideActions-icon,
   html[data-plus=true] .Tag,
   html[data-plus=true] .HotListNav-item,
   html[data-plus=true] .VoteButton {
@@ -205,6 +207,9 @@ function createUserStyle() {
   }
   html[data-plus=true] .Modal-closeIcon {
     fill: #8590a6;
+  }
+  html[data-plus=true] .Post-SideActions button.like {
+    color: #8590a6;
   }
   /* tab栏 & 卡片 */
   html[data-plus=true] .Favlists-item,
